@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup — Assignment 1: Pokédex Team Builder</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}</style>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="mx-auto max-w-5xl">
+
+<p class="mb-6 rounded border border-amber-300 bg-amber-50 p-3 text-sm">
+  🖼 <b>ภาพเป้าหมายเท่านั้น — ไม่ใช่เกณฑ์ให้คะแนน</b><br>
+  rubric ไม่มีแถวคะแนนความสวย จัดหน้าเป็นแบบอื่นได้เต็มที่ ขอแค่มี<b>ข้อมูลและปุ่มครบตามโจทย์</b> ·
+  ห้ามลอกโค้ดจากไฟล์นี้ (ไม่มี React อยู่ในนี้) · โจทย์เต็มอยู่ใน <code>ASSIGNMENT.md</code>
+</p>
+
+<!-- ============ Nav (ทุกหน้าใช้ร่วมกัน = layout route) ============ -->
+<p class="mb-1 text-xs font-bold text-gray-500">Nav — อยู่ใน layout route เขียนที่เดียว ใช้ทุกหน้า · เลขในวงเล็บมาจาก useTeam()</p>
+<div class="mb-8 rounded-lg border bg-white shadow-sm">
+  <nav class="flex items-center gap-2 border-b px-4 py-3">
+    <span class="rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold text-white">หน้าแรก</span>
+    <span class="rounded-md px-3 py-1.5 text-sm text-gray-600">Pokédex</span>
+    <span class="rounded-md px-3 py-1.5 text-sm text-gray-600">ทีม (3/6)</span>
+    <span class="ml-auto text-xs text-gray-400">← เมนูที่ active ต้องเข้มอันเดียว (หน้าแรกต้องใส่ <code>end</code>)</span>
+  </nav>
+  <div class="p-8 text-center">
+    <h1 class="text-3xl font-bold">Pokédex Team Builder</h1>
+    <p class="mt-2 text-gray-600">เลือก Pokémon รุ่นแรก (#1–#151) เข้าทีมได้สูงสุด 6 ตัว</p>
+    <p class="mt-4 text-lg">ตอนนี้ทีมมี <b class="text-red-600">3/6</b> ตัว</p>
+    <span class="mt-6 inline-block rounded-md bg-red-600 px-4 py-2 font-semibold text-white">ไปหน้ารายการ</span>
+  </div>
+</div>
+
+<!-- ============ /pokemon ============ -->
+<p class="mb-1 text-xs font-bold text-gray-500">/pokemon?q=char&amp;type=fire — ค่าในช่องค้นหาและ dropdown มาจาก URL (เปิดแท็บใหม่ต้องได้ค่านี้ทันที)</p>
+<div class="mb-8 rounded-lg border bg-white p-6 shadow-sm">
+  <div class="flex flex-col gap-3 sm:flex-row">
+    <input value="char" class="flex-1 rounded-md border px-3 py-2">
+    <select class="rounded-md border px-3 py-2"><option>fire</option></select>
+  </div>
+  <p class="mt-4 text-sm text-gray-500">พบ 3 ตัว</p>
+  <div class="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" id="list"></div>
+  <div class="mt-4 space-y-1 text-xs text-gray-500">
+    <p>• การ์ดต้องมี: รูป · <code>#id</code> · ชื่อ · ป้าย "อยู่ในทีม" ถ้าตัวนั้นอยู่ในทีม</p>
+    <p>• ต้องมี 3 สถานะ: กำลังโหลด / โหลดไม่สำเร็จ / ไม่พบผลลัพธ์</p>
+  </div>
+</div>
+
+<!-- ============ /pokemon/:nameOrId ============ -->
+<p class="mb-1 text-xs font-bold text-gray-500">/pokemon/charmander — พิมพ์ URL ตรง ๆ หรือใช้ /pokemon/4 ก็ต้องได้หน้าเดียวกัน</p>
+<div class="mb-8 rounded-lg border bg-white p-6 shadow-sm">
+  <div class="flex flex-col gap-6 sm:flex-row">
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png" class="mx-auto h-48 w-48 object-contain" alt="charmander">
+    <div class="flex-1">
+      <p class="text-sm text-gray-400">#004</p>
+      <h1 class="text-3xl font-bold capitalize">charmander</h1>
+      <div class="mt-3"><span class="rounded-full bg-gray-100 px-3 py-1 text-sm">fire</span></div>
+      <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <div><dt class="text-gray-500">ส่วนสูง</dt><dd class="font-semibold">0.6 ม.</dd></div>
+        <div><dt class="text-gray-500">น้ำหนัก</dt><dd class="font-semibold">8.5 กก.</dd></div>
+      </dl>
+      <p class="mt-1 text-xs text-amber-700">⚠️ API ให้มาเป็นเดซิเมตร/เฮกโตกรัม — ต้องแปลงเอง</p>
+      <span class="mt-6 inline-block rounded-md bg-red-600 px-4 py-2 font-semibold text-white">เพิ่มเข้าทีม</span>
+      <p class="mt-2 text-xs text-gray-500">ทีมเต็ม → ปุ่มนี้ต้อง disabled <b>พร้อมบอกเหตุผล</b> · ถ้าอยู่ในทีมแล้ว → เปลี่ยนเป็น "เอาออกจากทีม"</p>
+    </div>
+  </div>
+  <div class="mt-8 flex items-center justify-between border-t pt-4 text-sm">
+    <span class="text-red-600">← #3</span><span class="text-gray-500">กลับหน้ารายการ</span><span class="text-red-600">#5 →</span>
+  </div>
+  <p class="mt-2 text-xs text-gray-500">#1 ต้องไม่มีปุ่มก่อนหน้า · #151 ต้องไม่มีปุ่มถัดไป</p>
+</div>
+
+<!-- ============ /team ============ -->
+<p class="mb-1 text-xs font-bold text-gray-500">/team — สมาชิกทีม + ฟอร์มลงทะเบียน (แสดงตอนมี error เพื่อให้เห็นตำแหน่งข้อความ)</p>
+<div class="mb-8 space-y-6 rounded-lg border bg-white p-6 shadow-sm">
+  <div>
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-bold">ทีมของฉัน (3/6)</h1>
+      <span class="text-sm text-red-600">ล้างทีม</span>
+    </div>
+    <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" id="team"></div>
+    <p class="mt-2 text-xs text-gray-500">ทีมว่าง → ต้องมีข้อความบอก ไม่ใช่พื้นที่เปล่า · <b>การ์ดต้องเป็น component ตัวเดียวกับหน้ารายการ</b> (R7)</p>
+  </div>
+  <div class="border-t pt-6">
+    <h2 class="text-xl font-bold">ลงทะเบียนทีม</h2>
+    <div class="mt-4 max-w-md space-y-4">
+      <div><label class="block text-sm font-medium">ชื่อเทรนเนอร์</label><input value="Ash" class="mt-1 w-full rounded-md border px-3 py-2"></div>
+      <div><label class="block text-sm font-medium">ชื่อทีม</label><input value="Pikachu" class="mt-1 w-full rounded-md border px-3 py-2">
+        <p class="mt-1 text-sm text-red-600">ชื่อทีมซ้ำกับ Pokémon ในทีม</p></div>
+      <div><label class="block text-sm font-medium">อีเมล</label><input value="ash@kanto.com" class="mt-1 w-full rounded-md border px-3 py-2"></div>
+      <div><label class="block text-sm font-medium">ยืนยันอีเมล</label><input value="ash@kanto.co" class="mt-1 w-full rounded-md border px-3 py-2">
+        <p class="mt-1 text-sm text-red-600">อีเมลไม่ตรงกัน</p>
+        <p class="mt-1 text-xs text-gray-500">← error ต้องอยู่ <b>ใต้ช่องนี้</b> ไม่ใช่ลอยบนสุดของฟอร์ม</p></div>
+      <p class="text-sm text-amber-700">ทีมมี 2 ตัว — ต้องมีอย่างน้อย 3 ตัว ขาดอีก 1 ตัว</p>
+      <span class="inline-block rounded-md bg-gray-300 px-4 py-2 font-semibold text-white">ลงทะเบียนทีม</span>
+      <p class="text-xs text-gray-500">ทีมไม่ถึง 3 ตัว → ปุ่ม disabled จริง · กำลังส่ง → "กำลังส่ง…" · ส่งสำเร็จ → การ์ดสรุป ชื่อเทรนเนอร์ + ชื่อทีม + รายชื่อสมาชิก</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 404 ============ -->
+<p class="mb-1 text-xs font-bold text-gray-500">* — พิมพ์ path มั่ว ๆ ต้องเจอหน้านี้ ไม่ใช่จอขาว</p>
+<div class="rounded-lg border bg-white p-8 text-center shadow-sm">
+  <p class="text-5xl font-bold text-gray-300">404</p>
+  <h1 class="mt-2 text-xl font-semibold">ไม่พบหน้านี้</h1>
+  <span class="mt-6 inline-block rounded-md bg-red-600 px-4 py-2 font-semibold text-white">กลับหน้าแรก</span>
+</div>
+
+</div>
+<script>
+const art = id => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
+const card = (id,name,inTeam,extra='') => `
+  <div class="flex flex-col rounded-lg border bg-white p-3 shadow-sm">
+    <div class="relative">
+      <img src="${art(id)}" class="mx-auto h-28 w-28 object-contain" alt="${name}">
+      ${inTeam?'<span class="absolute right-0 top-0 rounded-full bg-green-600 px-2 py-0.5 text-xs font-semibold text-white">อยู่ในทีม</span>':''}
+    </div>
+    <p class="mt-2 text-xs text-gray-400">#${String(id).padStart(3,'0')}</p>
+    <p class="font-semibold capitalize">${name}</p>${extra}
+  </div>`
+document.getElementById('list').innerHTML =
+  card(4,'charmander',true) + card(5,'charmeleon',false) + card(6,'charizard',false)
+const btn = '<div class="mt-2"><span class="block w-full rounded-md border border-red-600 px-2 py-1 text-center text-sm font-semibold text-red-600">เอาออก</span></div>'
+document.getElementById('team').innerHTML =
+  card(25,'pikachu',true,btn) + card(4,'charmander',true,btn) + card(7,'squirtle',true,btn)
+</script>
+</body>
+</html>
