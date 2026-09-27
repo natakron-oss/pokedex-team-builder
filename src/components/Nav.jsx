@@ -22,6 +22,9 @@ function Nav() {
           <span className="text-sm sm:text-base">KANTO <span className="text-[#e15b45]">FIELD GUIDE</span></span>
         </NavLink>
         <div className="flex items-center gap-1 rounded-full bg-white/70 p-1 shadow-[inset_0_0_0_1px_#e4e9e1]">
+          <NavLink to="/" end className={linkClass}>
+            หน้าแรก
+          </NavLink>
           <NavLink to="/pokemon" className={linkClass}>
             Pokédex
           </NavLink>
