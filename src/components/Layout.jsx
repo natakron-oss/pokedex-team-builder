@@ -4,13 +4,13 @@ import Nav from './Nav.jsx'
 
 function Layout() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <Nav />
-      <main className="mx-auto max-w-5xl p-4 sm:p-6">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <Outlet />
       </main>
-      <footer className="mx-auto max-w-5xl px-4 pb-6 text-center text-xs text-gray-400">
-        Pokédex Team Builder · ข้อมูลจาก PokéAPI
+      <footer className="mx-auto max-w-6xl px-4 pb-8 text-center text-xs font-medium tracking-wide text-[#78847c] sm:px-6">
+        POKÉDEX TEAM BUILDER <span className="mx-1 text-[#e15b45]">/</span> ข้อมูลจาก PokéAPI
       </footer>
     </div>
   )

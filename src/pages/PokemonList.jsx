@@ -51,7 +51,7 @@ function PokemonList() {
       .filter((p) => !type || (typeIds && typeIds.has(p.id)))
   }, [list.data, q, type, typeIds])
 
-  const { add, remove, has, isFull } = useTeam()
+  const { add, remove, has, count, isFull } = useTeam()
 
   const loading = list.loading || (type && typeRes.loading)
   const error = list.error || (type ? typeRes.error : null)
@@ -59,20 +59,31 @@ function PokemonList() {
   const waitingType = Boolean(type && !typeRes.data && !typeRes.error)
 
   return (
-    <div className="rounded-lg border bg-white p-4 shadow-sm sm:p-6">
-      <h1 className="text-2xl font-bold">Pokédex (#1–#151)</h1>
+    <div>
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <p className="text-xs font-extrabold tracking-[0.16em] text-[#d9513c]">KANTO REGION · GEN 01</p>
+          <h1 className="mt-1 text-3xl font-black tracking-tight text-[#20312b] sm:text-4xl">สำรวจ Pokédex</h1>
+          <p className="mt-2 text-sm text-[#6f7b72]">เลือกสมาชิกที่ใช่ แล้วประกอบทีมในแบบของคุณ</p>
+        </div>
+        <div className="rounded-xl border border-[#e1e8dd] bg-white/75 px-4 py-3 text-sm font-bold text-[#526158]">
+          ทีมของคุณ <span className="ml-2 text-[#347b55]">{count}/6 ตัว</span>
+        </div>
+      </div>
 
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-7 flex flex-col gap-3 rounded-2xl border border-[#e1e8dd] bg-white/80 p-3 shadow-sm sm:flex-row">
         <input
           value={q}
           onChange={(e) => updateParams({ q: e.target.value })}
           placeholder="ค้นหาชื่อ เช่น char"
-          className="flex-1 rounded-md border px-3 py-2"
+          aria-label="ค้นหา Pokémon"
+          className="min-w-0 flex-1 rounded-xl border border-[#e1e8dd] bg-[#f8faf6] px-4 py-3 text-sm outline-none placeholder:text-[#9aa49b] focus:border-[#4e9a72] focus:bg-white"
         />
         <select
           value={type}
           onChange={(e) => updateParams({ type: e.target.value })}
-          className="rounded-md border px-3 py-2"
+          aria-label="กรองตามธาตุ"
+          className="rounded-xl border border-[#e1e8dd] bg-[#f8faf6] px-4 py-3 text-sm font-semibold capitalize text-[#46564c] outline-none focus:border-[#4e9a72]"
         >
           {TYPES.map((t) => (
             <option key={t || 'all'} value={t}>
@@ -95,11 +106,11 @@ function PokemonList() {
           </button>
         </div>
       ) : results.length === 0 ? (
-        <p className="mt-6 text-gray-500">ไม่พบผลลัพธ์</p>
+        <p className="mt-8 rounded-2xl border border-dashed border-[#ccd7ca] bg-white/50 p-10 text-center font-semibold text-[#6f7b72]">ไม่พบ Pokémon ที่ตรงกับการค้นหา</p>
       ) : (
         <>
-          <p className="mt-4 text-sm text-gray-500">พบ {results.length} ตัว</p>
-          <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <p className="mt-6 text-xs font-bold tracking-wide text-[#77847a]">แสดงผล {results.length} ตัว <span className="ml-2 text-[#a2aaa1]">·</span> <span className="ml-2">กดการ์ดเพื่อดูรายละเอียด</span></p>
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
             {results.map((p) => {
               const inTeam = has(p.id)
               return (
@@ -107,7 +118,8 @@ function PokemonList() {
                   {inTeam ? (
                     <button
                       onClick={() => remove(p.id)}
-                      className="mt-2 w-full rounded-md border border-red-600 px-2 py-1 text-sm font-semibold text-red-600"
+                      aria-pressed="true"
+                      className="w-full rounded-xl border border-[#4e9a72] bg-white px-2 py-2 text-sm font-bold text-[#347b55] hover:bg-[#e1f0e0]"
                     >
                       เอาออกจากทีม
                     </button>
@@ -116,15 +128,15 @@ function PokemonList() {
                       onClick={() => add(p)}
                       disabled={isFull}
                       title={isFull ? `ทีมเต็มแล้ว (${MAX_TEAM}/6)` : 'เพิ่มเข้าทีม'}
-                      className={`mt-2 w-full rounded-md px-2 py-1 text-sm font-semibold text-white ${
-                        isFull ? 'cursor-not-allowed bg-gray-300' : 'bg-red-600 hover:bg-red-700'
+                      className={`w-full rounded-xl px-2 py-2 text-sm font-bold text-white ${
+                        isFull ? 'cursor-not-allowed bg-[#b9c2ba]' : 'bg-[#d9513c] shadow-sm hover:bg-[#bd4232]'
                       }`}
                     >
                       เพิ่มเข้าทีม
                     </button>
                   )}
                   {isFull && !inTeam && (
-                    <p className="mt-1 text-xs text-gray-400">ทีมเต็มแล้ว (6/6)</p>
+                    <p className="mt-1 text-center text-xs text-[#8b968e]">ทีมเต็มแล้ว (6/6)</p>
                   )}
                 </PokemonCard>
               )
@@ -133,9 +145,6 @@ function PokemonList() {
         </>
       )}
 
-      <p className="mt-6 text-xs text-gray-400">
-        ค้นหา + ธาตุอยู่ใน URL — copy ลิงก์ส่งเพื่อนได้เลย
-      </p>
     </div>
   )
 }

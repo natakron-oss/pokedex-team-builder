@@ -59,28 +59,33 @@ function Team() {
   }
 
   return (
-    <div className="space-y-6 rounded-lg border bg-white p-4 shadow-sm sm:p-6">
+    <div className="space-y-8">
       <div>
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">ทีมของฉัน ({team.length}/{MAX_TEAM})</h1>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-extrabold tracking-[0.16em] text-[#d9513c]">YOUR LINEUP</p>
+            <h1 className="mt-1 text-3xl font-black text-[#20312b]">ทีมของฉัน <span className="text-[#4e9a72]">{team.length}/{MAX_TEAM}</span></h1>
+          </div>
           {team.length > 0 && (
-            <button onClick={() => { clear(); setSummary(null) }} className="text-sm text-red-600">
+            <button onClick={() => { clear(); setSummary(null) }} className="rounded-full border border-[#e8cbc4] px-4 py-2 text-sm font-bold text-[#c64d3c] hover:bg-[#fff0ed]">
               ล้างทีม
             </button>
           )}
         </div>
 
         {team.length === 0 ? (
-          <p className="mt-4 text-gray-500">
-            ทีมยังว่าง — <Link to="/pokemon" className="text-red-600">ไปเลือก Pokémon</Link> เข้าทีมก่อน
-          </p>
+          <div className="mt-5 rounded-2xl border border-dashed border-[#cbd6ca] bg-white/55 px-5 py-10 text-center">
+            <p className="text-lg font-extrabold text-[#425249]">ยังไม่มีสมาชิกในทีม</p>
+            <p className="mt-1 text-sm text-[#78847c]">เลือก Pokémon อย่างน้อย 3 ตัวเพื่อปลดล็อกการลงทะเบียนทีม</p>
+            <Link to="/pokemon" className="mt-5 inline-flex rounded-full bg-[#d9513c] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#bd4232]">ไปเลือก Pokémon</Link>
+          </div>
         ) : (
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
             {team.map((m) => (
               <PokemonCard key={m.id} id={m.id} name={m.name}>
                 <button
                   onClick={() => remove(m.id)}
-                  className="mt-2 w-full rounded-md border border-red-600 px-2 py-1 text-sm font-semibold text-red-600"
+                  className="w-full rounded-xl border border-[#e8cbc4] bg-white px-2 py-2 text-sm font-bold text-[#c64d3c] hover:bg-[#fff0ed]"
                 >
                   เอาออก
                 </button>
@@ -90,20 +95,21 @@ function Team() {
         )}
       </div>
 
-      <div className="border-t pt-6">
-        <h2 className="text-xl font-bold">ลงทะเบียนทีม</h2>
+      <div className="border-t border-[#dfe5dc] pt-7">
+        <p className="text-xs font-extrabold tracking-[0.16em] text-[#d9513c]">MAKE IT OFFICIAL</p>
+        <h2 className="mt-1 text-2xl font-black text-[#20312b]">ลงทะเบียนทีม</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-4 max-w-md space-y-4" noValidate>
           <Field label="ชื่อเทรนเนอร์" error={errors.trainerName}>
-            <input {...register('trainerName')} className="mt-1 w-full rounded-md border px-3 py-2" />
+            <input {...register('trainerName')} className="mt-1 w-full rounded-xl border border-[#dfe5dc] bg-white/85 px-3 py-2.5 outline-none focus:border-[#4e9a72]" />
           </Field>
           <Field label="ชื่อทีม" error={errors.teamName}>
-            <input {...register('teamName')} className="mt-1 w-full rounded-md border px-3 py-2" />
+            <input {...register('teamName')} className="mt-1 w-full rounded-xl border border-[#dfe5dc] bg-white/85 px-3 py-2.5 outline-none focus:border-[#4e9a72]" />
           </Field>
           <Field label="อีเมล" error={errors.email}>
-            <input {...register('email')} type="email" className="mt-1 w-full rounded-md border px-3 py-2" />
+            <input {...register('email')} type="email" className="mt-1 w-full rounded-xl border border-[#dfe5dc] bg-white/85 px-3 py-2.5 outline-none focus:border-[#4e9a72]" />
           </Field>
           <Field label="ยืนยันอีเมล" error={errors.confirmEmail}>
-            <input {...register('confirmEmail')} type="email" className="mt-1 w-full rounded-md border px-3 py-2" />
+            <input {...register('confirmEmail')} type="email" className="mt-1 w-full rounded-xl border border-[#dfe5dc] bg-white/85 px-3 py-2.5 outline-none focus:border-[#4e9a72]" />
           </Field>
 
           {!canSubmit && (
@@ -115,8 +121,8 @@ function Team() {
           <button
             type="submit"
             disabled={!canSubmit || isSubmitting}
-            className={`rounded-md px-4 py-2 font-semibold text-white ${
-              !canSubmit || isSubmitting ? 'cursor-not-allowed bg-gray-300' : 'bg-red-600 hover:bg-red-700'
+            className={`rounded-full px-5 py-2.5 font-bold text-white ${
+              !canSubmit || isSubmitting ? 'cursor-not-allowed bg-[#b9c2ba]' : 'bg-[#d9513c] hover:bg-[#bd4232]'
             }`}
           >
             {isSubmitting ? 'กำลังส่ง…' : 'ลงทะเบียนทีม'}
@@ -124,8 +130,8 @@ function Team() {
         </form>
 
         {summary && (
-          <div className="mt-6 max-w-md rounded-lg border border-green-300 bg-green-50 p-4">
-            <h3 className="font-bold text-green-800">ลงทะเบียนสำเร็จ</h3>
+          <div className="mt-6 max-w-md rounded-2xl border border-[#b9d8bf] bg-[#eef7ec] p-5">
+            <h3 className="font-black text-[#347b55]">ลงทะเบียนสำเร็จ</h3>
             <p className="mt-2 text-sm">เทรนเนอร์: <b>{summary.trainerName}</b></p>
             <p className="mt-1 text-sm">ชื่อทีม: <b>{summary.teamName}</b></p>
             <p className="mt-1 text-sm">สมาชิก ({summary.members.length} ตัว):</p>
